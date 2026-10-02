@@ -1,0 +1,60 @@
+<header class="header">
+
+  <div class="logo">
+
+    <div class="logo-mark">
+      N
+    </div>
+
+    <span>
+      NIWAHANA
+    </span>
+
+  </div>
+
+
+  <div class="user-section">
+
+    <div class="header-image-wrapper">
+
+      <img
+        *ngIf="profileImage"
+        [src]="profileImage"
+        alt="Profile"
+        class="profile-image"
+      >
+
+      <div
+        *ngIf="!profileImage"
+        class="header-empty-image"
+      >
+        +
+      </div>
+
+    </div>
+
+
+    <div class="user-info">
+
+      <span class="user-name">
+        {{ userName || 'Loading...' }}
+      </span>
+
+      <span class="user-email">
+        {{ userEmail || 'Loading...' }}
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="logout-button"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</header>

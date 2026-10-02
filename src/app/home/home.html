@@ -1,0 +1,236 @@
+<app-header></app-header>
+
+<div class="home-container">
+
+  <!-- USER PROFILE -->
+  <div
+    *ngIf="user as currentUser"
+    class="profile-page"
+  >
+
+    <!-- PAGE TITLE -->
+    <div class="page-title">
+      User Panel
+    </div>
+
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+
+      <div class="profile-main">
+
+        <!-- PROFILE INFORMATION -->
+        <div class="profile-info">
+
+          <h1>
+            {{ currentUser.fullName }}
+          </h1>
+
+          <h2>
+            {{ currentUser.position }}
+          </h2>
+
+          <p>
+            <span class="info-icon">✉</span>
+            {{ currentUser.email }}
+          </p>
+
+          <p>
+            <span class="info-icon">▦</span>
+            {{ currentUser.department }}
+          </p>
+
+          <p>
+            <span class="info-icon">🆔</span>
+            {{ currentUser.staffId }}
+          </p>
+
+        </div>
+
+
+        <!-- PROFILE IMAGE -->
+        <div class="profile-image-area">
+
+          <div class="profile-image-wrapper">
+
+            <!-- PROFILE IMAGE -->
+            <img
+              *ngIf="profileImage"
+              [src]="profileImage"
+              alt="Profile Image"
+              class="profile-image"
+            >
+
+            <!-- EMPTY PROFILE IMAGE -->
+            <div
+              *ngIf="!profileImage"
+              class="empty-profile-image"
+            >
+              <span>+</span>
+            </div>
+
+          </div>
+
+
+          <!-- IMAGE BUTTONS -->
+          <div class="image-buttons">
+
+            <!-- HIDDEN FILE INPUT -->
+            <input
+              #fileInput
+              type="file"
+              accept="image/jpeg,image/png,image/jpg,image/webp"
+              hidden
+              (change)="changeProfileImage($event)"
+            >
+
+
+            <!-- CHANGE IMAGE -->
+            <button
+              type="button"
+              class="edit-image-button"
+              (click)="fileInput.click()"
+              title="Change profile image"
+            >
+              ✎
+            </button>
+
+
+            <!-- DELETE IMAGE -->
+            <button
+              *ngIf="profileImage"
+              type="button"
+              class="delete-image-button"
+              (click)="deleteProfileImage()"
+              title="Delete profile image"
+            >
+              🗑
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PROFILE DETAILS -->
+    <div class="details-card">
+
+      <div class="details-title">
+        Profile Details
+      </div>
+
+
+      <!-- DETAILS GRID -->
+      <div class="details-grid">
+
+        <!-- MOBILE -->
+        <div class="form-group">
+
+          <label for="mobile">
+            Mobile
+          </label>
+
+          <intl-tel-input
+            [(ngModel)]="currentUser.mobilePhone"
+            initialCountry="lk"
+            [loadUtils]="loadUtils"
+            [inputAttributes]="{
+              id: 'mobile',
+              placeholder: 'Enter mobile number'
+            }"
+            (validityChange)="onMobileValidityChange($event)"
+          ></intl-tel-input>
+
+        </div>
+
+
+        <!-- TELEPHONE -->
+        <div class="form-group">
+
+          <label for="telephone">
+            Telephone
+          </label>
+
+          <intl-tel-input
+            [(ngModel)]="currentUser.telephone"
+            initialCountry="lk"
+            [loadUtils]="loadUtils"
+            [inputAttributes]="{
+              id: 'telephone',
+              placeholder: 'Enter telephone number'
+            }"
+            (validityChange)="onTelephoneValidityChange($event)"
+          ></intl-tel-input>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADDRESS -->
+      <div class="form-group full-width">
+
+        <label for="address">
+          Address
+        </label>
+
+        <textarea
+          id="address"
+          [(ngModel)]="currentUser.address"
+          placeholder="Enter address"
+          rows="3"
+        ></textarea>
+
+      </div>
+
+
+      <!-- LINKEDIN -->
+      <div class="form-group full-width">
+
+        <label for="linkedin">
+          LinkedIn
+        </label>
+
+        <input
+          id="linkedin"
+          type="url"
+          [(ngModel)]="currentUser.linkedInLink"
+          placeholder="https://www.linkedin.com/in/username"
+        >
+
+      </div>
+
+
+      <!-- SAVE BUTTON -->
+      <div class="profile-actions">
+
+        <button
+          type="button"
+          class="save-button"
+          [disabled]="isSaving"
+          (click)="saveUser()"
+        >
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+  <div
+    *ngIf="!user"
+    class="loading"
+  >
+    Loading user information...
+  </div>
+
+</div>
+
