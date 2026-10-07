@@ -12,50 +12,63 @@
 
   </div>
 
-  <nav class="header-navigation">
-   
-    
+    <nav class="header-navigation">
+
+    <a
+      routerLink="/home"
+      routerLinkActive="active"
+      class="nav-link"
+    >
+      Dashboard
+    </a>
+
     <a
       routerLink="/bungalows"
       routerLinkActive="active"
+      class="nav-link"
     >
       Bungalows
     </a>
+
   </nav>
 
 
-  <div class="user-section">
+    <div class="user-section">
 
-    <div class="header-image-wrapper">
+    <a routerLink="/profile" class="profile-link" title="Open User Panel">
 
-      <img
-        *ngIf="profileImage"
-        [src]="profileImage"
-        alt="Profile"
-        class="profile-image"
-      >
+      <div class="header-image-wrapper">
 
-      <div
-        *ngIf="!profileImage"
-        class="header-empty-image"
-      >
-        +
+        <img
+          *ngIf="profileImage"
+          [src]="profileImage"
+          alt="Profile"
+          class="profile-image"
+        >
+
+        <div
+          *ngIf="!profileImage"
+          class="header-empty-image"
+        >
+          +
+        </div>
+
       </div>
 
-    </div>
 
+      <div class="user-info">
 
-    <div class="user-info">
+        <span class="user-name">
+          {{ userName || 'Loading...' }}
+        </span>
 
-      <span class="user-name">
-        {{ userName || 'Loading...' }}
-      </span>
+        <span class="user-email">
+          {{ userEmail || 'Loading...' }}
+        </span>
 
-      <span class="user-email">
-        {{ userEmail || 'Loading...' }}
-      </span>
+      </div>
 
-    </div>
+    </a>
 
 
     <button

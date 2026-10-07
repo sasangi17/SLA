@@ -13,7 +13,6 @@
   z-index: 1000;
 }
 
-
 /* Logo */
 
 .logo {
@@ -39,6 +38,48 @@
   font-size: 17px;
 }
 
+/* Navigation */
+
+.header-navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link {
+  position: relative;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475467;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-link:hover {
+  background: #f4f7fb;
+  color: #173f73;
+}
+
+.nav-link.active {
+  background: #eaf1fc;
+  color: #2f61b5;
+}
+
+/* underline bar on the active link */
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: #2f61b5;
+}
 
 /* User section */
 
@@ -48,6 +89,21 @@
   gap: 13px;
 }
 
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.profile-link:hover {
+  background: #f4f7fb;
+}
 
 /* Profile Image */
 
@@ -135,6 +191,16 @@
     display: none;
   }
 
+  .nav-link {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .nav-link.active::after {
+    left: 10px;
+    right: 10px;
+  }
+
   .user-info {
     min-width: 0;
   }
@@ -146,4 +212,5 @@
   .logout-button {
     padding: 0 11px;
   }
+
 }
