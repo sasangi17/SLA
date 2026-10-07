@@ -1,186 +1,117 @@
 .header {
   width: 100%;
-
   min-height: 72px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   padding: 0 28px;
-
   box-sizing: border-box;
-
   background: #ffffff;
-
   border-bottom: 1px solid #e1e6ee;
-
-  box-shadow:
-    0 2px 8px rgba(16, 24, 40, 0.06);
-
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.06);
   position: relative;
-
   z-index: 1000;
 }
 
 
-/* ======================================
-   LOGO
-====================================== */
+/* Logo */
 
 .logo {
   display: flex;
-
   align-items: center;
-
   gap: 11px;
-
   color: #173f73;
-
   font-size: 21px;
-
   font-weight: 700;
-
   letter-spacing: 0.7px;
 }
 
 .logo-mark {
   width: 34px;
-
   height: 34px;
-
   border-radius: 8px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   background: #2f61b5;
-
   color: #ffffff;
-
   font-weight: 700;
-
   font-size: 17px;
 }
 
 
-/* ======================================
-   USER SECTION
-====================================== */
+/* User section */
 
 .user-section {
   display: flex;
-
   align-items: center;
-
   gap: 13px;
 }
 
 
-/* ======================================
-   IMAGE
-====================================== */
+/* Profile Image */
 
 .header-image-wrapper {
   width: 43px;
-
   height: 43px;
-
   border-radius: 50%;
-
   overflow: hidden;
-
   flex-shrink: 0;
-
   background: #e9eef5;
 }
 
 .profile-image {
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
   display: block;
 }
 
 .header-empty-image {
   width: 100%;
-
   height: 100%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   color: #8091a8;
-
   font-size: 20px;
 }
 
 
-/* ======================================
-   USER INFO
-====================================== */
+/* User Info */
 
 .user-info {
   display: flex;
-
   flex-direction: column;
-
   justify-content: center;
-
   min-width: 160px;
 }
 
 .user-name {
   font-size: 14px;
-
   font-weight: 600;
-
   color: #1b2d43;
 }
 
 .user-email {
   margin-top: 3px;
-
   font-size: 12px;
-
   color: #718096;
 }
 
 
-/* ======================================
-   LOGOUT
-====================================== */
+/* Logout */
 
 .logout-button {
   border: 1px solid #d9e0ea;
-
   background: #ffffff;
-
   color: #344054;
-
   height: 38px;
-
   padding: 0 16px;
-
   border-radius: 8px;
-
   cursor: pointer;
-
   font-size: 13px;
-
   font-weight: 600;
-
   transition:
     background 0.2s ease,
     border-color 0.2s ease;
@@ -188,14 +119,11 @@
 
 .logout-button:hover {
   background: #f4f7fb;
-
   border-color: #b8c4d3;
 }
 
 
-/* ======================================
-   MOBILE
-====================================== */
+/* Mobile */
 
 @media (max-width: 650px) {
 

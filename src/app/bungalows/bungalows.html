@@ -1,0 +1,288 @@
+<app-header></app-header>
+
+<div class="bungalows-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+
+    <div>
+      <h1>Bungalows Management</h1>
+
+      <p>
+        View and manage Bungalows details
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- Loading -->
+  <div
+    class="loading-container"
+    *ngIf="isLoading"
+  >
+
+    <div class="loader"></div>
+
+    <p>
+      Loading Bungalows records...
+    </p>
+
+  </div>
+
+
+  <!-- Bungalows Table -->
+  <div
+    class="table-container"
+    *ngIf="!isLoading"
+  >
+
+    <table>
+
+      <thead>
+        <tr>
+
+          <th>ID</th>
+
+          <th>Bungalows Name</th>
+
+          <th>Bungalows Code</th>
+
+          <th>Location</th>
+
+          <th>Status</th>
+
+          <th>Action</th>
+
+        </tr>
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="let bungalows of bungalowsList"
+        >
+
+          <td>
+            {{ bungalows.bungalowId }}
+          </td>
+
+          <td>
+            {{ bungalows.bungalowName }}
+          </td>
+
+          <td>
+            {{ bungalows.bungalowCode }}
+          </td>
+
+          <td>
+            {{ bungalows.bungalowLocation || '-' }}
+          </td>
+
+          <td>
+
+            <span
+              class="status"
+              [class.active]="bungalows.isActive"
+              [class.inactive]="!bungalows.isActive"
+            >
+
+              {{
+                bungalows.isActive
+                  ? 'Active'
+                  : 'Inactive'
+              }}
+
+            </span>
+
+          </td>
+
+          <td>
+
+            <button
+              type="button"
+              class="edit-button"
+              (click)="editBungalows(bungalows)"
+            >
+              Edit
+            </button>
+
+          </td>
+
+        </tr>
+
+
+        <!-- No records -->
+        <tr
+          *ngIf="bungalowsList.length === 0"
+        >
+
+          <td
+            colspan="6"
+            class="no-records"
+          >
+            No Bungalows records found.
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- EDIT PANEL -->
+  <!-- ========================= -->
+
+  <div
+    class="edit-overlay"
+    *ngIf="editingBungalows"
+  >
+
+    <div class="edit-card">
+
+      <!-- Edit Header -->
+      <div class="edit-header">
+
+        <div>
+
+          <h2>
+            Edit Bungalows
+          </h2>
+
+          <p>
+            Update Bungalows information
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelEdit()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- Form -->
+      <div class="form-container">
+
+        <!-- Bangalore Name -->
+        <div class="form-group">
+
+          <label>
+            Bungalows Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="editingBungalows.bungalowName"
+            placeholder="Enter Bungalows name"
+          />
+
+        </div>
+
+
+        <!-- Bangalore Code -->
+        <div class="form-group">
+
+          <label>
+            Bungalows  Code
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="editingBungalows.bungalowCode"
+            placeholder="Enter Bungalows code"
+          />
+
+        </div>
+
+
+        <!-- Location -->
+        <div class="form-group">
+
+          <label>
+            Location
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="editingBungalows.bungalowLocation"
+            placeholder="Enter Bungalows location"
+          />
+
+        </div>
+
+
+        <!-- Status -->
+        <div class="form-group">
+
+          <label>
+            Status
+          </label>
+
+          <select
+            [(ngModel)]="editingBungalows.isActive"
+          >
+
+            <option [ngValue]="true">
+              Active
+            </option>
+
+            <option [ngValue]="false">
+              Inactive
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Buttons -->
+        <div class="form-buttons">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="cancelEdit()"
+            [disabled]="isSaving"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="save-button"
+            (click)="saveBungalows()"
+            [disabled]="isSaving"
+          >
+
+            <span *ngIf="!isSaving">
+              Save Changes
+            </span>
+
+            <span *ngIf="isSaving">
+              Saving...
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

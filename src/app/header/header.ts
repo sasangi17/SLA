@@ -13,7 +13,9 @@ import {
 } from '@angular/common';
 
 import {
-  Router
+  Router,
+  RouterLink,
+  RouterLinkActive
 } from '@angular/router';
 
 import {
@@ -38,7 +40,9 @@ import {
   standalone: true,
 
   imports: [
-    CommonModule
+    CommonModule,
+    RouterLink,
+    RouterLinkActive
   ],
 
   templateUrl: './header.html',
@@ -53,59 +57,44 @@ export class Header
 
   staffId: number | null = null;
 
-  profileImage:
-    string | null = null;
+  profileImage: string | null = null;
 
-  private imageSubscription?:
-    Subscription;
+  private imageSubscription?: Subscription;
 
 
   constructor(
 
-    private userService:
-      UserService,
+    private userService: UserService,
 
-    private profileImageService:
-      ProfileImageService,
+    private profileImageService: ProfileImageService,
 
-    private authService:
-      AuthService,
+    private authService: AuthService,
 
-    private router:
-      Router,
+    private router: Router,
 
-    private cdr:
-      ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
 
     @Inject(PLATFORM_ID)
-    private platformId:
-      Object
+    private platformId: Object
 
   ) {}
 
 
   ngOnInit(): void {
 
-    if (
-      !isPlatformBrowser(
-        this.platformId
-      )
-    ) {
+    // Skip everything during server-side rendering
+    if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
 
     const storedUser =
-      localStorage.getItem(
-        'loggedInUser'
-      );
+      localStorage.getItem('loggedInUser');
 
 
     if (!storedUser) {
 
-      this.router.navigateByUrl(
-        '/'
-      );
+      this.router.navigateByUrl('/');
 
       return;
     }
@@ -115,35 +104,29 @@ export class Header
 
     try {
 
-      loginUser =
-        JSON.parse(storedUser);
+      loginUser = JSON.parse(storedUser);
 
     } catch {
 
       this.authService.logout();
 
-      this.router.navigateByUrl(
-        '/'
-      );
+      this.router.navigateByUrl('/');
 
       return;
     }
 
 
-    const userId =
-      Number(
-        loginUser.userId ??
-        loginUser.id
-      );
+    const userId = Number(
+      loginUser.userId ??
+      loginUser.id
+    );
 
 
     if (!userId) {
 
       this.authService.logout();
 
-      this.router.navigateByUrl(
-        '/'
-      );
+      this.router.navigateByUrl('/');
 
       return;
     }
@@ -159,11 +142,7 @@ export class Header
 
         next: (user) => {
 
-          console.log(
-            'HEADER USER:',
-            user
-          );
-
+          console.log('HEADER USER:', user);
 
           this.userName =
             user.fullName ||
@@ -174,10 +153,10 @@ export class Header
             user.email ||
             '';
 
-            this.staffId =
+          this.staffId =
             user.staffId;
 
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         },
 
         error: (error) => {
@@ -206,10 +185,9 @@ export class Header
               image
             );
 
-            this.profileImage =
-              image;
+            this.profileImage = image;
 
-            this.cdr.detectChanges();
+            this.cdr.markForCheck();
           }
         });
 
@@ -229,9 +207,7 @@ export class Header
 
   logout(): void {
 
-    console.log(
-      'Logout clicked'
-    );
+    console.log('Logout clicked');
 
 
     this.authService.logout();
@@ -249,7 +225,7 @@ export class Header
     this.profileImage = null;
 
 
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
 
 
     // Your login page is the root route

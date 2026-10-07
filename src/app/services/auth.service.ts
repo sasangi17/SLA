@@ -82,17 +82,10 @@ export class AuthService {
           // Save logged-in user
           const loggedInUser = {
 
-            userId:
-              response.id,
-
-            staffId:
-              response.staffId,  
-
-            email:
-              response.email,
-
-            fullName:
-              response.fullName
+            userId: response.id,
+            staffId: response.staffId,  
+            email: response.email,
+            fullName: response.fullName
 
           };
 
