@@ -7,9 +7,7 @@ namespace Niwahana_backend.Business
     {
         private readonly BungalowsRepository _bungalowsRepository;
 
-        public BungalowsBusiness(
-            BungalowsRepository bungalowsRepository 
-        )
+        public BungalowsBusiness(BungalowsRepository bungalowsRepository)
         {
             _bungalowsRepository = bungalowsRepository;
         }
@@ -19,22 +17,24 @@ namespace Niwahana_backend.Business
             return _bungalowsRepository.GetAllBungalows();
         }
 
-        public BungalowsMl? GetBungalowsById(
-            int bungalowId
-        )
+        public BungalowsMl? GetBungalowsById(int bungalowId)
         {
-            return _bungalowsRepository.GetBungalowsById(
-                bungalowId
-            );
+            return _bungalowsRepository.GetBungalowsById(bungalowId);
         }
 
-        public bool UpdateBungalows(
-            BungalowsMl bungalows
-        )
+        public bool AddBungalow(BungalowsMl bungalow)
         {
-            return _bungalowsRepository.UpdateBungalows(
-                bungalows
-            );
+            return _bungalowsRepository.AddBungalow(bungalow);
+        }
+
+        public bool UpdateBungalows(BungalowsMl bungalows)
+        {
+            return _bungalowsRepository.UpdateBungalows(bungalows);
+        }
+
+         public bool DeleteBungalow(int bungalowId)
+        {
+            return _bungalowsRepository.DeleteBungalow(bungalowId);
         }
     }
 }

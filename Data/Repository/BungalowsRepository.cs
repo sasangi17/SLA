@@ -30,11 +30,7 @@ namespace Niwahana_backend.Repository.Data
                 FROM Bungalows
                 ORDER BY BungalowId";
 
-            var table = _baseSqlDL.ExecuteReader(
-                query,
-                new List<DbParametersSql.QueryParameters>()
-            );
-
+            var table = _baseSqlDL.ExecuteReader(query,new List<DbParametersSql.QueryParameters>());
             var bungalowsList = new List<BungalowsMl>();
 
             foreach (DataRow row in table.Rows)
@@ -74,8 +70,7 @@ namespace Niwahana_backend.Repository.Data
                 FROM Bungalows
                 WHERE BungalowId = @BungalowId";
 
-            var parameters =
-                new List<DbParametersSql.QueryParameters>
+            var parameters = new List<DbParametersSql.QueryParameters>
                 {
                     DbParametersSql.SetValues("@BungalowId",SqlDbType.Int,bungalowsId)
                 };
@@ -103,11 +98,46 @@ namespace Niwahana_backend.Repository.Data
             };
         }
 
+        //Add Bungalows
+        public bool AddBungalow(BungalowsMl bungalow)
+        {
+            const string query = @"
+                INSERT INTO Bungalows
+                (
+                    BungalowName,
+                    BungalowCode,
+                    BungalowLocation,
+                    IsActive,
+                    CreateUser,
+                    CreateDateTime
+                )
+                VALUES
+                (
+                    @BungalowName,
+                    @BungalowCode,
+                    @BungalowLocation,
+                    @IsActive,
+                    @CreateUser,
+                    GETDATE()
+                )";
+
+            var parameters = new List<DbParametersSql.QueryParameters>
+                {
+                    DbParametersSql.SetValues("@BungalowName",SqlDbType.NVarChar,bungalow.BungalowName),
+                    DbParametersSql.SetValues("@BungalowCode",SqlDbType.NVarChar,bungalow.BungalowCode),
+                    DbParametersSql.SetValues("@BungalowLocation",SqlDbType.NVarChar,bungalow.BungalowLocation),
+                    DbParametersSql.SetValues("@IsActive",SqlDbType.Bit,bungalow.IsActive),
+                    DbParametersSql.SetValues("@CreateUser",SqlDbType.Int,bungalow.CreateUser)
+                };
+
+            var rows = _baseSqlDL.ExecuteNonQuery(query,parameters);
+
+            return rows > 0;
+        }
+
 
         // UPDATE BUNGALOWS
-        public bool UpdateBungalows(
-            BungalowsMl bungalows
-        )
+        public bool UpdateBungalows(BungalowsMl bungalows)
         {
             const string query = @"
                 UPDATE Bungalows
@@ -119,8 +149,7 @@ namespace Niwahana_backend.Repository.Data
                     UpdateUser = @UpdateUser,
                     UpdateDateTime = GETDATE()
                 WHERE BungalowId = @BungalowId";
-            var parameters =
-                new List<DbParametersSql.QueryParameters>
+            var parameters = new List<DbParametersSql.QueryParameters>
                 {
                     DbParametersSql.SetValues("@BungalowId",SqlDbType.Int,bungalows.BungalowId),
                     DbParametersSql.SetValues("@BungalowName",SqlDbType.NVarChar,bungalows.BungalowName),
@@ -128,6 +157,25 @@ namespace Niwahana_backend.Repository.Data
                     DbParametersSql.SetValues("@BungalowLocation",SqlDbType.NVarChar,bungalows.BungalowLocation),
                     DbParametersSql.SetValues("@IsActive",SqlDbType.Bit,bungalows.IsActive),
                     DbParametersSql.SetValues("@UpdateUser", SqlDbType.Int, bungalows.UpdateUser)
+                };
+
+            var rows = _baseSqlDL.ExecuteNonQuery(query,parameters);
+
+            return rows > 0;
+        }
+        public bool DeleteBungalow(int bungalowId)
+        {
+            const string query = @"
+                DELETE FROM Bungalows
+                WHERE BungalowId = @BungalowId";
+
+            var parameters = new List<DbParametersSql.QueryParameters>
+                {
+                    DbParametersSql.SetValues(
+                        "@BungalowId",
+                        SqlDbType.Int,
+                        bungalowId
+                    )
                 };
 
             var rows = _baseSqlDL.ExecuteNonQuery(query,parameters);

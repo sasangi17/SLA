@@ -12,11 +12,9 @@ namespace Niwahana_backend.Controllers
     public class BungalowsController : ControllerBase
     {
         private readonly BungalowsBusiness _bungalowsBusiness;
-        public BungalowsController(
-            BungalowsBusiness bungalowsBusiness
-        )
+        public BungalowsController(BungalowsBusiness bungalowsBusiness)
         {
-            _bungalowsBusiness = bungalowsBusiness  ;
+            _bungalowsBusiness = bungalowsBusiness;
         }
 
 
@@ -24,11 +22,9 @@ namespace Niwahana_backend.Controllers
         [HttpGet("getall")]
         public IActionResult GetAllBungalows()
         {
-            var bungalows =
-                _bungalowsBusiness.GetAllBungalows();
+            var bungalows = _bungalowsBusiness.GetAllBungalows();
 
-            var result = bungalows.Select(x =>
-                new BungalowsDto
+            var result = bungalows.Select(x => new BungalowsDto
                 {
                     BungalowId = x.BungalowId,
                     BungalowName = x.BungalowName,
@@ -44,14 +40,9 @@ namespace Niwahana_backend.Controllers
 
         // GET BY ID
         [HttpGet("get")]
-        public IActionResult GetBungalows(
-            int bungalowId
-        )
+        public IActionResult GetBungalows(int bungalowId)
         {
-            var bungalows =
-                _bungalowsBusiness.GetBungalowsById(
-                    bungalowId
-                );
+            var bungalows = _bungalowsBusiness.GetBungalowsById(bungalowId);
 
             if (bungalows == null)
             {
@@ -71,13 +62,61 @@ namespace Niwahana_backend.Controllers
             });
         }
 
+        [HttpPost("addbungalow")]
+        public IActionResult AddBungalow([FromBody] BungalowsMl bungalow)
+        {
+            if (bungalow == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Bungalow data is required."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(bungalow.BungalowName))
+            {
+                return BadRequest(new
+                {
+                    message = "Bungalow name is required."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(bungalow.BungalowCode))
+            {
+                return BadRequest(new
+                {
+                    message = "Bungalow code is required."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(bungalow.BungalowLocation))
+            {
+                return BadRequest(new
+                {
+                    message = "Bungalow location is required."
+                });
+            }
+
+            var created = _bungalowsBusiness.AddBungalow(bungalow);
+
+            if (!created)
+            {
+                return BadRequest(new
+                {
+                    message = "Unable to add bungalow."
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Bungalow added successfully."
+            });
+        }
+
 
         // UPDATE
-        [HttpPut("update")]
-        public IActionResult UpdateBungalows(
-            int bungalowId,
-            [FromBody] BungalowsMl bungalows
-        )
+        [HttpPut("updatebungalow")]
+        public IActionResult UpdateBungalows(int bungalowId,[FromBody] BungalowsMl bungalows)
         {
             if (bungalows == null)
             {
@@ -95,23 +134,17 @@ namespace Niwahana_backend.Controllers
                 });
             }
 
-            var existing =
-                    _bungalowsBusiness.GetBungalowsById(
-                    bungalowId
-                );
+            var existing =_bungalowsBusiness.GetBungalowsById(bungalowId);
 
             if (existing == null)
             {
                 return NotFound(new
                 {
-                    message = "Bangalore not found."
+                    message = "Bungalow not found."
                 });
             }
 
-            var updated =
-                _bungalowsBusiness.UpdateBungalows(
-                    bungalows
-                );
+            var updated =_bungalowsBusiness.UpdateBungalows(bungalows);
 
             if (!updated)
             {
@@ -124,6 +157,36 @@ namespace Niwahana_backend.Controllers
             return Ok(new
             {
                 message = "Bungalows updated successfully."
+            });
+        }
+
+        //Delete Bungalow
+        [HttpDelete("deletebungalow")]
+        public IActionResult DeleteBungalow(int bungalowId)
+        {
+            var existing = _bungalowsBusiness.GetBungalowsById(bungalowId);
+
+            if (existing == null)
+            {
+                return NotFound(new
+                {
+                    message = "Bungalow not found."
+                });
+            }
+
+            var deleted = _bungalowsBusiness.DeleteBungalow(bungalowId);
+
+            if (!deleted)
+            {
+                return BadRequest(new
+                {
+                    message = "Unable to delete bungalow."
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Bungalow deleted successfully."
             });
         }
     }
