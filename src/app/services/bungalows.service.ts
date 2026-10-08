@@ -39,14 +39,26 @@ export class BungalowsService {
       );
   }
 
-  updateBungalows(
-    bungalowId: number,
-    bungalows: BungalowsModel 
-  ): Observable<any> {
+   addBungalow(bungalow: BungalowsModel): Observable<any> {
+  return this.http.post(
+    `${this.apiUrl}/addbungalow`,
+    bungalow
+  );
+}
 
-    return this.http.put(
-      `${this.apiUrl}/update?bungalowId=${bungalowId}`,
-      bungalows
-    );
-  }
+updateBungalows(
+  bungalowId: number,
+  bungalows: BungalowsModel
+): Observable<any> {
+  return this.http.put(
+    `${this.apiUrl}/updatebungalow?bungalowId=${bungalowId}`,
+    bungalows
+  );
+}
+
+deleteBungalow(bungalowId: number): Observable<any> {
+  return this.http.delete(
+    `${this.apiUrl}/deletebungalow?bungalowId=${bungalowId}`
+  );
+}
 }

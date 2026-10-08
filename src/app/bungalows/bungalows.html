@@ -2,7 +2,10 @@
 
 <div class="bungalows-page">
 
-  <!-- Page Header -->
+  <!-- ========================= -->
+  <!-- PAGE HEADER -->
+  <!-- ========================= -->
+
   <div class="page-header">
 
     <div>
@@ -13,10 +16,21 @@
       </p>
     </div>
 
+    <button
+      type="button"
+      class="add-button"
+      (click)="openAddBungalow()"
+    >
+      + Add Bungalow
+    </button>
+
   </div>
 
 
-  <!-- Loading -->
+  <!-- ========================= -->
+  <!-- LOADING -->
+  <!-- ========================= -->
+
   <div
     class="loading-container"
     *ngIf="isLoading"
@@ -31,7 +45,10 @@
   </div>
 
 
-  <!-- Bungalows Table -->
+  <!-- ========================= -->
+  <!-- TABLE -->
+  <!-- ========================= -->
+
   <div
     class="table-container"
     *ngIf="!isLoading"
@@ -40,56 +57,49 @@
     <table>
 
       <thead>
+
         <tr>
 
-          <th>ID</th>
-
           <th>Bungalows Name</th>
-
           <th>Bungalows Code</th>
-
           <th>Location</th>
-
           <th>Status</th>
-
           <th>Action</th>
 
         </tr>
+
       </thead>
 
 
       <tbody>
 
-        <tr
-          *ngFor="let bungalows of bungalowsList"
-        >
+        <tr *ngFor="let bungalow of bungalowsList">
 
           <td>
-            {{ bungalows.bungalowId }}
+            {{ bungalow.bungalowName }}
           </td>
 
-          <td>
-            {{ bungalows.bungalowName }}
-          </td>
 
           <td>
-            {{ bungalows.bungalowCode }}
+            {{ bungalow.bungalowCode }}
           </td>
 
+
           <td>
-            {{ bungalows.bungalowLocation || '-' }}
+            {{ bungalow.bungalowLocation || '-' }}
           </td>
+
 
           <td>
 
             <span
               class="status"
-              [class.active]="bungalows.isActive"
-              [class.inactive]="!bungalows.isActive"
+              [class.active]="bungalow.isActive"
+              [class.inactive]="!bungalow.isActive"
             >
 
               {{
-                bungalows.isActive
+                bungalow.isActive
                   ? 'Active'
                   : 'Inactive'
               }}
@@ -98,14 +108,25 @@
 
           </td>
 
-          <td>
+
+          <td class="action-buttons">
 
             <button
               type="button"
               class="edit-button"
-              (click)="editBungalows(bungalows)"
+              (click)="editBungalows(bungalow)"
             >
               Edit
+            </button>
+
+
+            <button
+              type="button"
+              class="delete-button"
+              (click)="deleteBungalow(bungalow)"
+              [disabled]="isDeleting"
+            >
+              Delete
             </button>
 
           </td>
@@ -113,16 +134,14 @@
         </tr>
 
 
-        <!-- No records -->
-        <tr
-          *ngIf="bungalowsList.length === 0"
-        >
+        <!-- NO RECORDS -->
 
-          <td
-            colspan="6"
-            class="no-records"
-          >
+        <tr *ngIf="bungalowsList.length === 0">
+          
+          <td colspan="6" class="no-records">
+
             No Bungalows records found.
+
           </td>
 
         </tr>
@@ -134,9 +153,162 @@
   </div>
 
 
-  <!-- ========================= -->
-  <!-- EDIT PANEL -->
-  <!-- ========================= -->
+  <!-- Add Bungalow -->
+
+  <div
+    class="edit-overlay"
+    *ngIf="isAdding"
+  >
+
+    <div class="edit-card">
+
+      <div class="edit-header">
+
+        <div>
+
+          <h2>
+            Add Bungalow
+          </h2>
+
+          <p>
+            Enter new bungalow information
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelAdd()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-container">
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+          <label>
+            Bungalow Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newBungalow.bungalowName"
+            placeholder="Enter bungalow name"
+          />
+
+        </div>
+
+
+        <!-- CODE -->
+
+        <div class="form-group">
+
+          <label>
+            Bungalow Code
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newBungalow.bungalowCode"
+            placeholder="Enter bungalow code"
+          />
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+          <label>
+            Location
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newBungalow.bungalowLocation"
+            placeholder="Enter bungalow location"
+          />
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+          <label>
+            Status
+          </label>
+
+          <select
+            [(ngModel)]="newBungalow.isActive"
+          >
+
+            <option [ngValue]="true">
+              Active
+            </option>
+
+            <option [ngValue]="false">
+              Inactive
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-buttons">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="cancelAdd()"
+            [disabled]="isSaving"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="save-button"
+            (click)="addBungalow()"
+            [disabled]="isSaving"
+          >
+
+            <span *ngIf="!isSaving">
+              Add Bungalow
+            </span>
+
+            <span *ngIf="isSaving">
+              Adding...
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- EDIT BUNGALOW MODAL -->
+  <!-- ================================================= -->
 
   <div
     class="edit-overlay"
@@ -145,17 +317,16 @@
 
     <div class="edit-card">
 
-      <!-- Edit Header -->
       <div class="edit-header">
 
         <div>
 
           <h2>
-            Edit Bungalows
+            Edit Bungalow
           </h2>
 
           <p>
-            Update Bungalows information
+            Update Bungalow information
           </p>
 
         </div>
@@ -172,42 +343,44 @@
       </div>
 
 
-      <!-- Form -->
       <div class="form-container">
 
-        <!-- Bangalore Name -->
+        <!-- NAME -->
+
         <div class="form-group">
 
           <label>
-            Bungalows Name
+            Bungalow Name
           </label>
 
           <input
             type="text"
             [(ngModel)]="editingBungalows.bungalowName"
-            placeholder="Enter Bungalows name"
+            placeholder="Enter bungalow name"
           />
 
         </div>
 
 
-        <!-- Bangalore Code -->
+        <!-- CODE -->
+
         <div class="form-group">
 
           <label>
-            Bungalows  Code
+            Bungalow Code
           </label>
 
           <input
             type="text"
             [(ngModel)]="editingBungalows.bungalowCode"
-            placeholder="Enter Bungalows code"
+            placeholder="Enter bungalow code"
           />
 
         </div>
 
 
-        <!-- Location -->
+        <!-- LOCATION -->
+
         <div class="form-group">
 
           <label>
@@ -217,13 +390,14 @@
           <input
             type="text"
             [(ngModel)]="editingBungalows.bungalowLocation"
-            placeholder="Enter Bungalows location"
+            placeholder="Enter bungalow location"
           />
 
         </div>
 
 
-        <!-- Status -->
+        <!-- STATUS -->
+
         <div class="form-group">
 
           <label>
@@ -247,7 +421,8 @@
         </div>
 
 
-        <!-- Buttons -->
+        <!-- BUTTONS -->
+
         <div class="form-buttons">
 
           <button
