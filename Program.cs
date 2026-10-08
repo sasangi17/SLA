@@ -56,6 +56,7 @@ builder.Services.AddScoped<BaseSqlDL>();
 builder.Services.AddScoped<AuthRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ProfileImageRepository>();
+builder.Services.AddScoped<BungalowsRepository>();
 
 
 // Business
@@ -63,6 +64,7 @@ builder.Services.AddScoped<ProfileImageRepository>();
 builder.Services.AddScoped<AuthBusiness>();
 builder.Services.AddScoped<UserBusiness>();
 builder.Services.AddScoped<ProfileImageBusiness>();
+builder.Services.AddScoped<BungalowsBusiness>();
 
 
 // JWT Service
