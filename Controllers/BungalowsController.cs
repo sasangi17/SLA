@@ -8,7 +8,7 @@ namespace Niwahana_backend.Controllers
 {
     [ApiController]
     [Route("api/bungalows")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class BungalowsController : ControllerBase
     {
         private readonly BungalowsBusiness _bungalowsBusiness;

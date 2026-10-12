@@ -29,24 +29,19 @@ namespace Niwahana_backend.Controllers
                 });
             }
 
-            if (string.IsNullOrWhiteSpace(loginDto.Email))
+            if (string.IsNullOrWhiteSpace(loginDto.Email) ||
+                string.IsNullOrWhiteSpace(loginDto.Password))
             {
                 return BadRequest(new
                 {
-                    message = "Email is required."
+                    message = "Email and password are required."
                 });
             }
 
-            if (string.IsNullOrWhiteSpace(loginDto.Password))
-            {
-                return BadRequest(new
-                {
-                    message = "Password is required."
-                });
-            }
-
-            // Database login
-            var user = _authBusiness.Login(loginDto.Email.Trim(),loginDto.Password);
+            var user = _authBusiness.Login(
+                loginDto.Email.Trim(),
+                loginDto.Password
+            );
 
             if (user == null)
             {
@@ -56,19 +51,80 @@ namespace Niwahana_backend.Controllers
                 });
             }
 
+            var roles = user.Role
+               .Split(
+                   ',',
+                   StringSplitOptions.RemoveEmptyEntries |
+                   StringSplitOptions.TrimEntries
+               )
+               .Select(role => role.ToLowerInvariant())
+               .Distinct()
+               .Select(role => role switch
+               {
+                   "admin" => "Admin",
+                   "user" => "User",
+                   _ => string.Empty
+               })
+               .ToList();
+
+            if (roles.Count == 0 || roles.Any(role => role == ""))
+            {
+                return StatusCode(500, new
+                {
+                    message = "Invalid role configuration for this account."
+                });
+            }
+
+            string? selectedRole = null;
+
+            if (!string.IsNullOrWhiteSpace(loginDto.SelectedRole))
+            {
+                selectedRole = roles.FirstOrDefault(role =>
+                    role.Equals(
+                        loginDto.SelectedRole.Trim(),
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                );
+
+                // Never issue a token for an unassigned role.
+                if (selectedRole == null)
+                {
+                    return StatusCode(403, new
+                    {
+                        message = "You are not assigned to this role."
+                    });
+                }
+            }
+            else if (roles.Count == 1)
+            {
+                // Automatically select the only assigned role.
+                selectedRole = roles[0];
+            }
+            else
+            {
+                // Let Angular ask the user which role to use.
+                return Ok(new
+                {
+                    requiresRoleSelection = true,
+                    roles
+                });
+            }
+
             // Generate JWT
-            var token = _jwtService.GenerateToken(user);
+            var token = _jwtService.GenerateToken(user, selectedRole);
 
             // Response
 
             return Ok(new
             {
+                requiresRoleSelection = false,
                 token = token,
                 id = user.Id,
                 staffId = user.StaffId,
                 email = user.Email,
                 fullName = user.FullName,
-
+                role = selectedRole,
+                roles
             });
         }
     }
