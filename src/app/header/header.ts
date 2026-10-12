@@ -200,6 +200,13 @@ export class Header
       .loadImage(userId);
   }
 
+  
+get isAdmin(): boolean {
+  return this.authService.isLoggedIn() &&
+    this.authService.hasRole('Admin');
+}
+
+
 
   // ==================================
   // LOGOUT

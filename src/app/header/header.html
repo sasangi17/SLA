@@ -22,13 +22,16 @@
       Dashboard
     </a>
 
-    <a
-      routerLink="/bungalows"
-      routerLinkActive="active"
-      class="nav-link"
-    >
-      Bungalows
-    </a>
+    
+<a
+  *ngIf="isAdmin"
+  routerLink="/bungalows"
+  routerLinkActive="active"
+  class="nav-link"
+>
+  Bungalows
+</a>
+
 
   </nav>
 
