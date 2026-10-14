@@ -51,21 +51,17 @@ namespace Niwahana_backend.Controllers
                 });
             }
 
-            var roles = user.Role
-               .Split(
-                   ',',
-                   StringSplitOptions.RemoveEmptyEntries |
-                   StringSplitOptions.TrimEntries
-               )
-               .Select(role => role.ToLowerInvariant())
-               .Distinct()
-               .Select(role => role switch
-               {
-                   "admin" => "Admin",
-                   "user" => "User",
-                   _ => string.Empty
-               })
-               .ToList();
+
+            var roles = user.Roles
+                .Select(role => role.Trim().ToLowerInvariant())
+                .Distinct()
+                .Select(role => role switch
+                {
+                    "admin" => "Admin",
+                    "user" => "User",
+                    _ => string.Empty
+                })
+                .ToList();
 
             if (roles.Count == 0 || roles.Any(role => role == ""))
             {
@@ -74,6 +70,7 @@ namespace Niwahana_backend.Controllers
                     message = "Invalid role configuration for this account."
                 });
             }
+
 
             string? selectedRole = null;
 

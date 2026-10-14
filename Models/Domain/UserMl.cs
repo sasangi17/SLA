@@ -1,4 +1,5 @@
-﻿namespace Niwahana_backend.Models.Domain
+﻿
+namespace Niwahana_backend.Models.Domain
 {
     public class UserMl
     {
@@ -13,7 +14,6 @@
         public string Telephone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string LinkedInLink { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
-
+        public List<string> Roles { get; set; } = new List<string>();
     }
 }
