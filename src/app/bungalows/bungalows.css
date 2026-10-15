@@ -22,7 +22,33 @@
   margin-bottom: 25px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
+.report-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #176b45;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.report-button:hover:not(:disabled) {
+  background: #105236;
+}
+
+.report-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 /* =========================
    ADD BUTTON
 ========================= */

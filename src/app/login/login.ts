@@ -17,7 +17,6 @@ export class Login {
   email = '';
   password = '';
 
-
   isLoading = signal(false);
   showRoleSelection = signal(false);
   availableRoles = signal<string[]>([]);

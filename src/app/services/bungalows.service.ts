@@ -46,6 +46,13 @@ export class BungalowsService {
   );
 }
 
+downloadBungalowReport(): Observable<Blob> {
+  return this.http.get(
+    `${this.apiUrl}/report`,
+    { responseType: 'blob' }
+  );
+}
+
 updateBungalows(
   bungalowId: number,
   bungalows: BungalowsModel
@@ -61,4 +68,5 @@ deleteBungalow(bungalowId: number): Observable<any> {
     `${this.apiUrl}/deletebungalow?bungalowId=${bungalowId}`
   );
 }
+
 }

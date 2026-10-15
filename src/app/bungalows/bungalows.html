@@ -2,9 +2,7 @@
 
 <div class="bungalows-page">
 
-  <!-- ========================= -->
-  <!-- PAGE HEADER -->
-  <!-- ========================= -->
+  <!-- page header -->
 
   <div class="page-header">
 
@@ -15,7 +13,20 @@
         View and manage Bungalows details
       </p>
     </div>
+    <div class="header-actions">
 
+    <button
+      *ngIf="isAdmin"
+      type="button"
+      class="report-button"
+      (click)="downloadBungalowReport()"
+      [disabled]="isDownloadingReport">
+
+      {{ isDownloadingReport
+          ? 'Generating PDF...'
+          : 'Download PDF Report' }}
+
+    </button>
     <button
       type="button"
       class="add-button"
@@ -25,11 +36,9 @@
     </button>
 
   </div>
+</div>
 
-
-  <!-- ========================= -->
-  <!-- LOADING -->
-  <!-- ========================= -->
+  <!-- loading -->
 
   <div
     class="loading-container"
@@ -45,9 +54,7 @@
   </div>
 
 
-  <!-- ========================= -->
-  <!-- TABLE -->
-  <!-- ========================= -->
+  <!-- Table-->
 
   <div
     class="table-container"

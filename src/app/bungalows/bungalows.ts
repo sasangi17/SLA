@@ -21,7 +21,7 @@ import {
 } from '../services/bungalows.service';
 
 import { Header } from '../header/header';
-
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-bungalows',
@@ -46,25 +46,29 @@ export class Bungalows implements OnInit {
   isSaving = false;
   isAdding = false;
   isDeleting = false;
+  isDownloadingReport = false;
+  isAdmin = false;
 
 
   constructor(
-    private bungalowsService: BungalowsService,
-    private cdr: ChangeDetectorRef,
+  private bungalowsService: BungalowsService,
+  private cdr: ChangeDetectorRef,
+  private authService: AuthService,
 
-    @Inject(PLATFORM_ID)
-    private platformId: Object
-  ) {}
+  @Inject(PLATFORM_ID)
+  private platformId: Object
+) {}
 
 
   ngOnInit(): void {
-
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    this.loadBungalows();
+  if (!isPlatformBrowser(this.platformId)) {
+    return;
   }
+
+  this.isAdmin = this.authService.hasRole('Admin');
+
+  this.loadBungalows();
+}
 
 
   // Empty bungalow
@@ -369,6 +373,49 @@ export class Bungalows implements OnInit {
       });
   }
 
+downloadBungalowReport(): void {
+  if (this.isDownloadingReport) {
+    return;
+  }
+
+  this.isDownloadingReport = true;
+
+  this.bungalowsService.downloadBungalowReport().subscribe({
+    next: (pdfBlob: Blob) => {
+      const url = window.URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download =
+        `Bungalow-Report-${new Date().toISOString().slice(0, 10)}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+
+      this.isDownloadingReport = false;
+      this.cdr.markForCheck();
+
+      Notiflix.Notify.success(
+        'Bungalow report downloaded successfully.'
+      );
+    },
+
+    error: (error) => {
+      console.error('Failed to download bungalow report:', error);
+
+      this.isDownloadingReport = false;
+      this.cdr.markForCheck();
+
+      Notiflix.Notify.failure(
+        'Failed to download the bungalow report. Please check your login and try again.'
+      );
+    }
+  });
+}
+
 
   // Delete 
 
@@ -432,5 +479,6 @@ export class Bungalows implements OnInit {
       
       }
     );
+    
   }
 }
