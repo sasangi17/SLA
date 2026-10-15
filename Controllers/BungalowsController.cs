@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Niwahana_backend.Business;
 using Niwahana_backend.Models.Domain;
 using Niwahana_backend.Models.Dto;
+using Niwahana_backend.Services;
+using System.Security.Claims;
+
 
 namespace Niwahana_backend.Controllers
 {
@@ -12,9 +15,14 @@ namespace Niwahana_backend.Controllers
     public class BungalowsController : ControllerBase
     {
         private readonly BungalowsBusiness _bungalowsBusiness;
-        public BungalowsController(BungalowsBusiness bungalowsBusiness)
+        private readonly BungalowReportService _bungalowReportService;
+
+        public BungalowsController(
+            BungalowsBusiness bungalowsBusiness,
+            BungalowReportService bungalowReportService)
         {
             _bungalowsBusiness = bungalowsBusiness;
+            _bungalowReportService = bungalowReportService;
         }
 
 
@@ -189,5 +197,33 @@ namespace Niwahana_backend.Controllers
                 message = "Bungalow deleted successfully."
             });
         }
+
+
+        [HttpGet("report")]
+        public IActionResult DownloadBungalowReport()
+        {
+            var bungalows = _bungalowsBusiness.GetAllBungalows();
+
+            // Read the administrator identity from the validated JWT claims.
+            var downloadedBy =
+                User.FindFirst(ClaimTypes.Name)?.Value
+                ?? User.FindFirst("name")?.Value
+                ?? User.FindFirst(ClaimTypes.Email)?.Value
+                ?? User.FindFirst("email")?.Value
+                ?? "Administrator";
+
+            var generatedAt = DateTime.Now;
+
+            var pdfBytes = _bungalowReportService.GenerateBungalowReport(
+                bungalows,
+                downloadedBy,
+                generatedAt);
+
+            var fileName =
+                $"Bungalow-Report-{generatedAt:yyyyMMdd-HHmmss}.pdf";
+
+            return File(pdfBytes, "application/pdf", fileName);
+        }
+
     }
 }

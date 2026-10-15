@@ -7,6 +7,8 @@ using Niwahana_backend.Repository.Data;
 using Niwahana_backend.Services;
 using System.Text;
 
+QuestPDF.Settings.License =
+    QuestPDF.Infrastructure.LicenseType.Community;
 var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
@@ -67,9 +69,10 @@ builder.Services.AddScoped<ProfileImageBusiness>();
 builder.Services.AddScoped<BungalowsBusiness>();
 
 
-// JWT Service
+// Services
 
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<BungalowReportService>();
 
 
 // JWT Authentication
