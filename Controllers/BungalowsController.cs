@@ -219,8 +219,7 @@ namespace Niwahana_backend.Controllers
                 downloadedBy,
                 generatedAt);
 
-            var fileName =
-                $"Bungalow-Report-{generatedAt:yyyyMMdd-HHmmss}.pdf";
+            var fileName =$"Bunga low-Report-{generatedAt:yyyyMMdd-HHmmss}.pdf";
 
             return File(pdfBytes, "application/pdf", fileName);
         }

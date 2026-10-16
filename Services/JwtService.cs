@@ -1,5 +1,4 @@
-﻿
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -34,22 +33,10 @@ namespace Niwahana_backend.Services
             // Store ONLY the role selected during login.
             var claims = new List<Claim>
             {
-                new Claim(
-                    ClaimTypes.NameIdentifier,
-                    user.Id.ToString()
-                ),
-                new Claim(
-                    ClaimTypes.Email,
-                    user.Email
-                ),
-                new Claim(
-                    ClaimTypes.Name,
-                    user.FullName
-                ),
-                new Claim(
-                    ClaimTypes.Role,
-                    selectedRole
-                )
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Name,user.FullName),
+                new Claim(ClaimTypes.Role,selectedRole)
             };
 
             var key = new SymmetricSecurityKey(
