@@ -1,0 +1,59 @@
+<div class="login-container">
+
+  @if (!showRoleSelection()) {
+
+    <form (ngSubmit)="login()">
+      <h2>Login</h2>
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        [(ngModel)]="email"
+        autocomplete="username"
+        required
+      />
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+        autocomplete="current-password"
+        required
+      />
+
+      <button type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? 'Signing in...' : 'Login' }}
+      </button>
+    </form>
+
+  } @else {
+
+    <!-- Role selection -->
+    <div class="role-selection">
+      <h2>Select your role</h2>
+
+      @for (role of availableRoles(); track role) {
+        <button
+          type="button"
+          [disabled]="isLoading()"
+          (click)="selectRole(role)"
+        >
+          {{ role }}
+        </button>
+      }
+
+      <button
+        type="button"
+        class="cancel-btn"
+        [disabled]="isLoading()"
+        (click)="cancelRoleSelection()"
+      >
+        Back
+      </button>
+    </div>
+
+  }
+
+</div>

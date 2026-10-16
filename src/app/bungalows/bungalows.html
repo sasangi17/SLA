@@ -1,0 +1,466 @@
+<app-header></app-header>
+
+<div class="bungalows-page">
+
+  <!-- page header -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Bungalows Management</h1>
+
+      <p>
+        View and manage Bungalows details
+      </p>
+    </div>
+    <div class="header-actions">
+
+    <button
+      *ngIf="isAdmin"
+      type="button"
+      class="report-button"
+      (click)="downloadBungalowReport()"
+      [disabled]="isDownloadingReport">
+
+      {{ isDownloadingReport
+          ? 'Generating PDF...'
+          : 'Download PDF Report' }}
+
+    </button>
+    <button
+      type="button"
+      class="add-button"
+      (click)="openAddBungalow()"
+    >
+      + Add Bungalow
+    </button>
+
+  </div>
+</div>
+
+  <!-- loading -->
+
+  <div
+    class="loading-container"
+    *ngIf="isLoading"
+  >
+
+    <div class="loader"></div>
+
+    <p>
+      Loading Bungalows records...
+    </p>
+
+  </div>
+
+
+  <!-- Table-->
+
+  <div
+    class="table-container"
+    *ngIf="!isLoading"
+  >
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Bungalows Name</th>
+          <th>Bungalows Code</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Action</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <tr *ngFor="let bungalow of bungalowsList">
+
+          <td>
+            {{ bungalow.bungalowName }}
+          </td>
+
+
+          <td>
+            {{ bungalow.bungalowCode }}
+          </td>
+
+
+          <td>
+            {{ bungalow.bungalowLocation || '-' }}
+          </td>
+
+
+          <td>
+
+            <span
+              class="status"
+              [class.active]="bungalow.isActive"
+              [class.inactive]="!bungalow.isActive"
+            >
+
+              {{
+                bungalow.isActive
+                  ? 'Active'
+                  : 'Inactive'
+              }}
+
+            </span>
+
+          </td>
+
+
+          <td class="action-buttons">
+
+            <button
+              type="button"
+              class="edit-button"
+              (click)="editBungalows(bungalow)"
+            >
+              Edit
+            </button>
+
+
+            <button
+              type="button"
+              class="delete-button"
+              (click)="deleteBungalow(bungalow)"
+              [disabled]="isDeleting"
+            >
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+
+        <!-- NO RECORDS -->
+
+        <tr *ngIf="bungalowsList.length === 0">
+             <td colspan="5" class="no-records">
+              No Bungalows records found.
+            </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- Add Bungalow -->
+
+  <div
+    class="edit-overlay"
+    *ngIf="isAdding"
+  >
+
+    <div class="edit-card">
+
+      <div class="edit-header">
+
+        <div>
+
+          <h2>
+            Add Bungalow
+          </h2>
+
+          <p>
+            Enter new bungalow information
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelAdd()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-container">
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+          <label>
+            Bungalow Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newBungalow.bungalowName"
+            placeholder="Enter bungalow name"
+          />
+
+        </div>
+
+
+        <!-- CODE -->
+
+        <div class="form-group">
+
+          <label>
+            Bungalow Code
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newBungalow.bungalowCode"
+            placeholder="Enter bungalow code"
+          />
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+          <label>
+            Location
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="newBungalow.bungalowLocation"
+            placeholder="Enter bungalow location"
+          />
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+          <label>
+            Status
+          </label>
+
+          <select
+            [(ngModel)]="newBungalow.isActive"
+          >
+
+            <option [ngValue]="true">
+              Active
+            </option>
+
+            <option [ngValue]="false">
+              Inactive
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-buttons">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="cancelAdd()"
+            [disabled]="isSaving"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="save-button"
+            (click)="addBungalow()"
+            [disabled]="isSaving"
+          >
+
+            <span *ngIf="!isSaving">
+              Add Bungalow
+            </span>
+
+            <span *ngIf="isSaving">
+              Adding...
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- EDIT BUNGALOW MODAL -->
+  <!-- ================================================= -->
+
+  <div
+    class="edit-overlay"
+    *ngIf="editingBungalows"
+  >
+
+    <div class="edit-card">
+
+      <div class="edit-header">
+
+        <div>
+
+          <h2>
+            Edit Bungalow
+          </h2>
+
+          <p>
+            Update Bungalow information
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cancelEdit()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-container">
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+          <label>
+            Bungalow Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="editingBungalows.bungalowName"
+            placeholder="Enter bungalow name"
+          />
+
+        </div>
+
+
+        <!-- CODE -->
+
+        <div class="form-group">
+
+          <label>
+            Bungalow Code
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="editingBungalows.bungalowCode"
+            placeholder="Enter bungalow code"
+          />
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+          <label>
+            Location
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="editingBungalows.bungalowLocation"
+            placeholder="Enter bungalow location"
+          />
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+          <label>
+            Status
+          </label>
+
+          <select
+            [(ngModel)]="editingBungalows.isActive"
+          >
+
+            <option [ngValue]="true">
+              Active
+            </option>
+
+            <option [ngValue]="false">
+              Inactive
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-buttons">
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="cancelEdit()"
+            [disabled]="isSaving"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="save-button"
+            (click)="saveBungalows()"
+            [disabled]="isSaving"
+          >
+
+            <span *ngIf="!isSaving">
+              Save Changes
+            </span>
+
+            <span *ngIf="isSaving">
+              Saving...
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

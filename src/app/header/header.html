@@ -1,0 +1,87 @@
+<header class="header">
+
+  <div class="logo">
+
+    <div class="logo-mark">
+      N
+    </div>
+
+    <span>
+      NIWAHANA
+    </span>
+
+  </div>
+
+    <nav class="header-navigation">
+
+    <a
+      routerLink="/home"
+      routerLinkActive="active"
+      class="nav-link"
+    >
+      Dashboard
+    </a>
+
+    
+<a
+  *ngIf="isAdmin"
+  routerLink="/bungalows"
+  routerLinkActive="active"
+  class="nav-link"
+>
+  Bungalows
+</a>
+
+
+  </nav>
+
+
+    <div class="user-section">
+
+    <a routerLink="/profile" class="profile-link" title="Open User Panel">
+
+      <div class="header-image-wrapper">
+
+        <img
+          *ngIf="profileImage"
+          [src]="profileImage"
+          alt="Profile"
+          class="profile-image"
+        >
+
+        <div
+          *ngIf="!profileImage"
+          class="header-empty-image"
+        >
+          +
+        </div>
+
+      </div>
+
+
+      <div class="user-info">
+
+        <span class="user-name">
+          {{ userName || 'Loading...' }}
+        </span>
+
+        <span class="user-email">
+          {{ userEmail || 'Loading...' }}
+        </span>
+
+      </div>
+
+    </a>
+
+
+    <button
+      type="button"
+      class="logout-button"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</header>
